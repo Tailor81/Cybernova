@@ -108,6 +108,13 @@
                         <span class="field-error" id="serviceTypeError"></span>
                     </div>
 
+                    <div class="form-group full-width">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="5" required
+                                  placeholder="Describe your security needs or what you'd like assessed (min 10 characters)">${description}</textarea>
+                        <span class="field-error" id="descriptionError"></span>
+                    </div>
+
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary btn-full">Submit Request</button>
                     </div>
