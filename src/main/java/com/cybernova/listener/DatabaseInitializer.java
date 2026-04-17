@@ -110,8 +110,8 @@ public class DatabaseInitializer implements ServletContextListener {
             event.getServletContext().log("CyberNova database initialized successfully");
 
         } catch (Exception initFailure) {
-            event.getServletContext().log("Database initialization failed: " + initFailure.getMessage());
-            throw new RuntimeException("Could not initialize database", initFailure);
+            event.getServletContext().log("Database initialization failed: " + initFailure.getMessage()
+                + " — check DB_URL, DB_USER, DB_PASSWORD environment variables");
         }
     }
 
