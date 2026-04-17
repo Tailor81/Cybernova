@@ -21,6 +21,7 @@
 
     <main class="admin-main">
         <div class="admin-topbar">
+            <button class="admin-mobile-toggle" id="adminMenuToggle"><i class="fa-solid fa-bars"></i></button>
             <h1>Dashboard</h1>
             <div class="admin-topbar-right">
                 <span class="admin-user">Welcome, Admin</span>
@@ -156,5 +157,6 @@
     }
 </script>
 
+<script src="${pageContext.request.contextPath}/js/main.js"></script>
 </body>
 </html>

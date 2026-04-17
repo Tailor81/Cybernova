@@ -45,6 +45,7 @@ function validateContactForm() {
     allFieldsValid = validateEmailField('email', 'A valid email address is required') && allFieldsValid;
     allFieldsValid = validateRequiredField('country', 'Country is required') && allFieldsValid;
     allFieldsValid = validateRequiredField('serviceType', 'Type of security issue is required') && allFieldsValid;
+    allFieldsValid = validateMinLength('description', 10, 'Description must be at least 10 characters') && allFieldsValid;
 
     var phoneField = document.getElementById('phoneNumber');
     if (phoneField && phoneField.value.trim() !== '') {
@@ -146,3 +147,29 @@ function highlightActiveNavLink() {
         }
     });
 }
+
+// Admin sidebar mobile toggle
+(function () {
+    var toggle = document.getElementById('adminMenuToggle');
+    var sidebar = document.getElementById('adminSidebar');
+    var overlay = document.getElementById('adminOverlay');
+
+    if (toggle && sidebar && overlay) {
+        toggle.addEventListener('click', function () {
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', function () {
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('active');
+        });
+
+        sidebar.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                sidebar.classList.remove('mobile-open');
+                overlay.classList.remove('active');
+            });
+        });
+    }
+})();

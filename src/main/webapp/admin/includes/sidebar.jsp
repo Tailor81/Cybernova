@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<aside class="admin-sidebar">
+<div class="admin-mobile-overlay" id="adminOverlay"></div>
+<aside class="admin-sidebar" id="adminSidebar">
     <div class="sidebar-brand">
         <span class="logo-icon"><i class="fa-solid fa-shield-halved"></i></span>
         <span class="sidebar-brand-text">CyberNova Admin</span>
