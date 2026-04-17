@@ -1,0 +1,11 @@
+build/
+lib/
+.git/
+.gitignore
+.env
+.idea/
+*.iml
+*.class
+*.war
+README.md
+database/
