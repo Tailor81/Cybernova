@@ -10,7 +10,7 @@
             <ul>
                 <li><a href="${pageContext.request.contextPath}/services.jsp">Services</a></li>
                 <li><a href="${pageContext.request.contextPath}/webinars">Webinars</a></li>
-                <li><a href="${pageContext.request.contextPath}/resources.jsp">Resources</a></li>
+                <li><a href="${pageContext.request.contextPath}/resources">Resources</a></li>
                 <li><a href="${pageContext.request.contextPath}/about.jsp">About</a></li>
             </ul>
         </div>

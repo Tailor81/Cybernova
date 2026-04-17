@@ -25,7 +25,7 @@
             <li><a href="${pageContext.request.contextPath}/">Home</a></li>
             <li><a href="${pageContext.request.contextPath}/services.jsp">Services</a></li>
             <li><a href="${pageContext.request.contextPath}/webinars">Webinars</a></li>
-            <li><a href="${pageContext.request.contextPath}/resources.jsp">Resources</a></li>
+            <li><a href="${pageContext.request.contextPath}/resources">Resources</a></li>
             <li><a href="${pageContext.request.contextPath}/about.jsp">About</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/login.jsp" class="nav-cta">Login</a></li>
         </ul>

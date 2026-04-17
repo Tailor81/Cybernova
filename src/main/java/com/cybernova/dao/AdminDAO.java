@@ -5,6 +5,8 @@ import com.cybernova.model.Admin;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminDAO {
 
@@ -28,6 +30,24 @@ public class AdminDAO {
         }
     }
 
+    public List<Admin> findAll() throws Exception {
+        String query = "SELECT admin_id, username FROM admin ORDER BY admin_id ASC";
+        List<Admin> admins = new ArrayList<>();
+
+        try (Connection database = DatabaseConnection.openConnection();
+             PreparedStatement statement = database.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                Admin admin = new Admin();
+                admin.setAdminId(rs.getInt("admin_id"));
+                admin.setUsername(rs.getString("username"));
+                admins.add(admin);
+            }
+        }
+        return admins;
+    }
+
     public void createAdmin(String username, String passwordHash) throws Exception {
         String insertQuery = "INSERT INTO admin (username, password_hash) VALUES (?, ?)";
 
@@ -39,4 +59,28 @@ public class AdminDAO {
             statement.executeUpdate();
         }
     }
+
+    public void deleteById(int adminId) throws Exception {
+        String query = "DELETE FROM admin WHERE admin_id = ?";
+
+        try (Connection database = DatabaseConnection.openConnection();
+             PreparedStatement statement = database.prepareStatement(query)) {
+
+            statement.setInt(1, adminId);
+            statement.executeUpdate();
+        }
+    }
+
+    public int countAdmins() throws Exception {
+        String query = "SELECT COUNT(*) FROM admin";
+
+        try (Connection database = DatabaseConnection.openConnection();
+             PreparedStatement statement = database.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+
+            if (rs.next()) return rs.getInt(1);
+            return 0;
+        }
+    }
 }
+

@@ -79,6 +79,19 @@ public class DatabaseInitializer implements ServletContextListener {
                 + "FOREIGN KEY (webinar_id) REFERENCES webinar(webinar_id) ON DELETE CASCADE)"
             );
 
+            statement.execute(
+                "CREATE TABLE IF NOT EXISTS resource ("
+                + "resource_id SERIAL PRIMARY KEY, "
+                + "title VARCHAR(200) NOT NULL, "
+                + "description TEXT, "
+                + "category VARCHAR(100) DEFAULT 'General', "
+                + "file_name VARCHAR(255) NOT NULL, "
+                + "file_type VARCHAR(100) NOT NULL, "
+                + "file_size BIGINT NOT NULL, "
+                + "file_data BYTEA NOT NULL, "
+                + "uploaded_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+            );
+
             ResultSet adminCheck = statement.executeQuery("SELECT COUNT(*) AS total FROM admin");
             adminCheck.next();
             if (adminCheck.getInt("total") == 0) {

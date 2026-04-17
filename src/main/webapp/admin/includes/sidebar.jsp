@@ -14,10 +14,10 @@
         <a href="${pageContext.request.contextPath}/admin/webinars" class="${param.activePage == 'webinars' ? 'active' : ''}">
             <span class="sidebar-icon"><i class="fa-solid fa-video"></i></span> Webinars
         </a>
-        <a href="${pageContext.request.contextPath}/resources.jsp" class="${param.activePage == 'resources' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/admin/resources" class="${param.activePage == 'resources' ? 'active' : ''}">
             <span class="sidebar-icon"><i class="fa-solid fa-folder-open"></i></span> Resources
         </a>
-        <a href="#" class="${param.activePage == 'users' ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/admin/users" class="${param.activePage == 'users' ? 'active' : ''}">
             <span class="sidebar-icon"><i class="fa-solid fa-users"></i></span> Users
         </a>
     </nav>

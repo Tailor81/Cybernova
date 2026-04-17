@@ -69,30 +69,24 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Organisation</th>
                             <th>Service Type</th>
-                            <th>Country</th>
                             <th>Status</th>
-                            <th>Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach items="${requests}" var="req">
                             <tr>
-                                <td>#${req.requestId}</td>
                                 <td>${req.fullName}</td>
                                 <td>${req.email}</td>
                                 <td>${req.organisationName}</td>
                                 <td><span class="service-badge">${req.serviceType}</span></td>
-                                <td>${req.country}</td>
                                 <td>
                                     <span class="status-badge status-${req.status}">${req.status}</span>
                                 </td>
-                                <td>${req.submissionDate}</td>
                                 <td class="actions-cell">
                                     <a href="${pageContext.request.contextPath}/admin/request-detail?id=${req.requestId}" class="btn btn-sm btn-outline">View</a>
                                     <form action="${pageContext.request.contextPath}/admin/delete-request" method="post" class="inline-form" onsubmit="return confirm('Are you sure you want to delete this request?');">
@@ -104,7 +98,7 @@
                         </c:forEach>
                         <c:if test="${empty requests}">
                             <tr>
-                                <td colspan="9" class="empty-state">No service requests found</td>
+                                <td colspan="6" class="empty-state">No service requests found</td>
                             </tr>
                         </c:if>
                     </tbody>
