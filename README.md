@@ -64,9 +64,9 @@ The app connects to a Supabase-hosted PostgreSQL database. Because the Supabase 
 Config file: `src/main/resources/db.properties`
 
 ```properties
-db.url=jdbc:postgresql://aws-0-eu-west-1.pooler.supabase.com:5432/postgres
+db.url=
 db.user=postgres.xsgzgfrrulcnemkywxpi
-db.password=Tecboy21@!@#$
+db.password=
 db.driver=org.postgresql.Driver
 ```
 
