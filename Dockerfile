@@ -17,7 +17,7 @@ RUN mkdir -p app/WEB-INF/classes app/WEB-INF/lib && \
     find src/main/java -name "*.java" > /tmp/sources.txt && \
     javac -cp "$CLASSPATH" -d app/WEB-INF/classes @/tmp/sources.txt && \
     cp -r src/main/webapp/* app/ && \
-    cp src/main/resources/db.properties app/WEB-INF/classes/ && \
+    echo "db.driver=org.postgresql.Driver" > app/WEB-INF/classes/db.properties && \
     cp lib/*.jar app/WEB-INF/lib/
 
 FROM tomcat:11.0-jdk17

@@ -14,12 +14,18 @@ public class DatabaseConnection {
     private static final Map<String, String> dotEnv = new HashMap<>();
 
     static {
-        try (InputStream configStream = DatabaseConnection.class
-                .getClassLoader()
-                .getResourceAsStream("db.properties")) {
-            Properties driverConfig = new Properties();
-            driverConfig.load(configStream);
-            Class.forName(driverConfig.getProperty("db.driver", "org.postgresql.Driver"));
+        try {
+            String driverClass = "org.postgresql.Driver";
+            try (InputStream configStream = DatabaseConnection.class
+                    .getClassLoader()
+                    .getResourceAsStream("db.properties")) {
+                if (configStream != null) {
+                    Properties driverConfig = new Properties();
+                    driverConfig.load(configStream);
+                    driverClass = driverConfig.getProperty("db.driver", driverClass);
+                }
+            }
+            Class.forName(driverClass);
         } catch (Exception e) {
             throw new RuntimeException("Database driver could not be loaded", e);
         }
