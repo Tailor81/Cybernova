@@ -6,3 +6,4 @@ lib/
 *.iml
 .DS_Store
 .env
+src/main/resources/db.properties
