@@ -48,8 +48,14 @@ if [ ! -f "$LIB_DIR/postgresql-42.7.3.jar" ]; then
         "https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar"
 fi
 
+if [ ! -f "$LIB_DIR/jakarta.servlet.jsp.jstl-api-3.0.0.jar" ]; then
+    echo "  Downloading Jakarta JSTL API..."
+    wget -q -O "$LIB_DIR/jakarta.servlet.jsp.jstl-api-3.0.0.jar" \
+        "https://repo1.maven.org/maven2/jakarta/servlet/jsp/jstl/jakarta.servlet.jsp.jstl-api/3.0.0/jakarta.servlet.jsp.jstl-api-3.0.0.jar"
+fi
+
 if [ ! -f "$LIB_DIR/jakarta.servlet.jsp.jstl-3.0.1.jar" ]; then
-    echo "  Downloading Jakarta JSTL..."
+    echo "  Downloading Jakarta JSTL impl..."
     wget -q -O "$LIB_DIR/jakarta.servlet.jsp.jstl-3.0.1.jar" \
         "https://repo1.maven.org/maven2/org/glassfish/web/jakarta.servlet.jsp.jstl/3.0.1/jakarta.servlet.jsp.jstl-3.0.1.jar"
 fi
