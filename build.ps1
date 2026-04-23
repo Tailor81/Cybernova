@@ -2,11 +2,11 @@
 # Run from PowerShell: .\build.ps1
 # Prerequisites:
 #   - Java 17 (https://adoptium.net)
-#   - Apache Tomcat 9 extracted to C:\tomcat9
+#   - Apache Tomcat 11 extracted to C:\tomcat11
 #   - javac on your PATH
 
 param(
-    [string]$TomcatHome = "C:\tomcat9"
+    [string]$TomcatHome = "C:\tomcat11"
 )
 
 $ProjectDir  = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -18,8 +18,8 @@ $LibDir      = "$ProjectDir\lib"
 $AppName     = "CyberNova"
 
 if (-not (Test-Path "$TomcatHome\lib")) {
-    Write-Host "Tomcat 9 not found at $TomcatHome" -ForegroundColor Red
-    Write-Host "Download from https://tomcat.apache.org/download-90.cgi and extract to C:\tomcat9"
+    Write-Host "Tomcat 11 not found at $TomcatHome" -ForegroundColor Red
+    Write-Host "Download from https://tomcat.apache.org/download-11.cgi and extract to C:\tomcat11"
     exit 1
 }
 
@@ -47,11 +47,8 @@ function Download-Jar($dest, $url) {
 Download-Jar "$LibDir\postgresql-42.7.3.jar" `
     "https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar"
 
-Download-Jar "$LibDir\taglibs-standard-spec-1.2.5.jar" `
-    "https://repo1.maven.org/maven2/org/apache/taglibs/taglibs-standard-spec/1.2.5/taglibs-standard-spec-1.2.5.jar"
-
-Download-Jar "$LibDir\taglibs-standard-impl-1.2.5.jar" `
-    "https://repo1.maven.org/maven2/org/apache/taglibs/taglibs-standard-impl/1.2.5/taglibs-standard-impl-1.2.5.jar"
+Download-Jar "$LibDir\jakarta.servlet.jsp.jstl-3.0.1.jar" `
+    "https://repo1.maven.org/maven2/org/glassfish/web/jakarta.servlet.jsp.jstl/3.0.1/jakarta.servlet.jsp.jstl-3.0.1.jar"
 
 Write-Host "[2/5] Compiling Java sources..."
 
@@ -82,8 +79,8 @@ if (Test-Path $deployPath) { Remove-Item -Recurse -Force $deployPath }
 Copy-Item -Recurse -Force $BuildDir $deployPath
 
 Write-Host "[5/5] Starting Tomcat..."
-Write-Host "  Run: $TomcatHome\bin\startup.bat"
-Write-Host "  Stop: $TomcatHome\bin\shutdown.bat"
+Write-Host "  Stop:  $TomcatHome\bin\shutdown.bat"
+Write-Host "  Start: $TomcatHome\bin\startup.bat"
 
 & "$TomcatHome\bin\startup.bat"
 

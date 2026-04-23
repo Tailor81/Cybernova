@@ -16,17 +16,25 @@ APP_NAME="CyberNova"
 
 if [ -z "$TOMCAT_HOME" ]; then
     if [[ $(uname -m) == 'arm64' ]]; then
-        BREW_CANDIDATE="/opt/homebrew/opt/tomcat@9/libexec"
+        BREW_PREFIX="/opt/homebrew"
     else
-        BREW_CANDIDATE="/usr/local/opt/tomcat@9/libexec"
+        BREW_PREFIX="/usr/local"
     fi
 
     for candidate in \
-        "$BREW_CANDIDATE" \
+        "$BREW_PREFIX/opt/tomcat@11/libexec" \
+        "$BREW_PREFIX/opt/tomcat/libexec" \
+        "$BREW_PREFIX/opt/tomcat@9/libexec" \
+        "$HOME/tomcat11" \
         "$HOME/tomcat9" \
         "$HOME/tomcat" \
+        "$HOME/Downloads/apache-tomcat-11"* \
+        "$HOME/Downloads/apache-tomcat-10"* \
+        "$HOME/Downloads/apache-tomcat-9"* \
+        "/opt/tomcat11" \
         "/opt/tomcat9" \
         "/opt/tomcat" \
+        "/Applications/Tomcat11" \
         "/Applications/Tomcat9" \
         "/Applications/Tomcat"
     do
@@ -38,11 +46,11 @@ if [ -z "$TOMCAT_HOME" ]; then
 fi
 
 if [ -z "$TOMCAT_HOME" ] || [ ! -d "$TOMCAT_HOME/lib" ]; then
-    echo "Tomcat 9 not found. Either:"
-    echo "  a) Install via Homebrew:  brew install tomcat@9"
-    echo "  b) Download the zip from https://tomcat.apache.org/download-90.cgi,"
-    echo "     extract it, then run:"
-    echo "       TOMCAT_HOME=/path/to/extracted/tomcat ./build-mac.sh"
+    echo "Tomcat not found. Either:"
+    echo "  a) Download Tomcat 11 from https://tomcat.apache.org/download-11.cgi,"
+    echo "     extract the tar.gz anywhere (e.g. ~/tomcat11), then run:"
+    echo "       TOMCAT_HOME=~/tomcat11 ./build-mac.sh"
+    echo "  b) Or if it is in Downloads, the script will auto-detect it next run"
     echo "  c) If using IntelliJ, set TOMCAT_HOME to the directory IntelliJ"
     echo "     points at (Run Configurations → Application server path)"
     exit 1
@@ -73,16 +81,10 @@ if [ ! -f "$LIB_DIR/postgresql-42.7.3.jar" ]; then
         "https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar"
 fi
 
-if [ ! -f "$LIB_DIR/taglibs-standard-spec-1.2.5.jar" ]; then
-    echo "  Downloading JSTL spec..."
-    curl -fsSL -o "$LIB_DIR/taglibs-standard-spec-1.2.5.jar" \
-        "https://repo1.maven.org/maven2/org/apache/taglibs/taglibs-standard-spec/1.2.5/taglibs-standard-spec-1.2.5.jar"
-fi
-
-if [ ! -f "$LIB_DIR/taglibs-standard-impl-1.2.5.jar" ]; then
-    echo "  Downloading JSTL impl..."
-    curl -fsSL -o "$LIB_DIR/taglibs-standard-impl-1.2.5.jar" \
-        "https://repo1.maven.org/maven2/org/apache/taglibs/taglibs-standard-impl/1.2.5/taglibs-standard-impl-1.2.5.jar"
+if [ ! -f "$LIB_DIR/jakarta.servlet.jsp.jstl-3.0.1.jar" ]; then
+    echo "  Downloading Jakarta JSTL..."
+    curl -fsSL -o "$LIB_DIR/jakarta.servlet.jsp.jstl-3.0.1.jar" \
+        "https://repo1.maven.org/maven2/org/glassfish/web/jakarta.servlet.jsp.jstl/3.0.1/jakarta.servlet.jsp.jstl-3.0.1.jar"
 fi
 
 echo "[2/5] Compiling Java sources..."
@@ -117,7 +119,9 @@ cp -r "$BUILD_DIR" "$TOMCAT_WEBAPPS/$APP_NAME"
 
 echo "[5/5] Restarting Tomcat..."
 
-if command -v brew &>/dev/null && brew list tomcat@9 &>/dev/null 2>&1; then
+if command -v brew &>/dev/null && brew list tomcat@11 &>/dev/null 2>&1; then
+    brew services restart tomcat@11
+elif command -v brew &>/dev/null && brew list tomcat@9 &>/dev/null 2>&1; then
     brew services restart tomcat@9
 else
     echo "  Manual Tomcat detected — restart it yourself:"

@@ -6,8 +6,32 @@ SRC_RESOURCES="$PROJECT_DIR/src/main/resources"
 WEBAPP_DIR="$PROJECT_DIR/src/main/webapp"
 BUILD_DIR="$PROJECT_DIR/build"
 LIB_DIR="$PROJECT_DIR/lib"
-TOMCAT_LIB="/usr/share/tomcat9/lib"
-TOMCAT_WEBAPPS="/var/lib/tomcat9/webapps"
+# Resolve Tomcat — prefer TOMCAT_HOME env var, then common Linux install paths
+if [ -z "$TOMCAT_HOME" ]; then
+    for candidate in \
+        "/opt/tomcat11" \
+        "/opt/tomcat" \
+        "$HOME/tomcat11" \
+        "$HOME/tomcat" \
+        "/usr/share/tomcat11" \
+        "/usr/share/tomcat9"
+    do
+        if [ -d "$candidate/lib" ]; then
+            TOMCAT_HOME="$candidate"
+            break
+        fi
+    done
+fi
+
+if [ -z "$TOMCAT_HOME" ] || [ ! -d "$TOMCAT_HOME/lib" ]; then
+    echo "Tomcat not found. Download Tomcat 11 from https://tomcat.apache.org/download-11.cgi,"
+    echo "extract it, then run: TOMCAT_HOME=/path/to/tomcat ./build.sh"
+    exit 1
+fi
+
+TOMCAT_LIB="$TOMCAT_HOME/lib"
+TOMCAT_WEBAPPS="$TOMCAT_HOME/webapps"
+echo "  Using Tomcat at: $TOMCAT_HOME"
 APP_NAME="CyberNova"
 
 echo "=== CyberNova Analytics Build ==="
@@ -24,16 +48,10 @@ if [ ! -f "$LIB_DIR/postgresql-42.7.3.jar" ]; then
         "https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar"
 fi
 
-if [ ! -f "$LIB_DIR/taglibs-standard-spec-1.2.5.jar" ]; then
-    echo "  Downloading JSTL spec..."
-    wget -q -O "$LIB_DIR/taglibs-standard-spec-1.2.5.jar" \
-        "https://repo1.maven.org/maven2/org/apache/taglibs/taglibs-standard-spec/1.2.5/taglibs-standard-spec-1.2.5.jar"
-fi
-
-if [ ! -f "$LIB_DIR/taglibs-standard-impl-1.2.5.jar" ]; then
-    echo "  Downloading JSTL impl..."
-    wget -q -O "$LIB_DIR/taglibs-standard-impl-1.2.5.jar" \
-        "https://repo1.maven.org/maven2/org/apache/taglibs/taglibs-standard-impl/1.2.5/taglibs-standard-impl-1.2.5.jar"
+if [ ! -f "$LIB_DIR/jakarta.servlet.jsp.jstl-3.0.1.jar" ]; then
+    echo "  Downloading Jakarta JSTL..."
+    wget -q -O "$LIB_DIR/jakarta.servlet.jsp.jstl-3.0.1.jar" \
+        "https://repo1.maven.org/maven2/org/glassfish/web/jakarta.servlet.jsp.jstl/3.0.1/jakarta.servlet.jsp.jstl-3.0.1.jar"
 fi
 
 echo "[2/5] Compiling Java sources..."
@@ -66,13 +84,25 @@ fi
 
 echo "[4/5] Deploying to Tomcat..."
 
-sudo rm -rf "$TOMCAT_WEBAPPS/$APP_NAME"
-sudo cp -r "$BUILD_DIR" "$TOMCAT_WEBAPPS/$APP_NAME"
-sudo chown -R tomcat9:tomcat9 "$TOMCAT_WEBAPPS/$APP_NAME"
+if [ -w "$TOMCAT_WEBAPPS" ]; then
+    rm -rf "$TOMCAT_WEBAPPS/$APP_NAME"
+    cp -r "$BUILD_DIR" "$TOMCAT_WEBAPPS/$APP_NAME"
+else
+    sudo rm -rf "$TOMCAT_WEBAPPS/$APP_NAME"
+    sudo cp -r "$BUILD_DIR" "$TOMCAT_WEBAPPS/$APP_NAME"
+fi
 
 echo "[5/5] Restarting Tomcat..."
 
-sudo systemctl restart tomcat9
+if systemctl is-active --quiet tomcat 2>/dev/null; then
+    sudo systemctl restart tomcat
+elif systemctl is-active --quiet tomcat9 2>/dev/null || systemctl is-enabled --quiet tomcat9 2>/dev/null; then
+    sudo systemctl restart tomcat9
+else
+    "$TOMCAT_HOME/bin/shutdown.sh" 2>/dev/null || true
+    sleep 2
+    "$TOMCAT_HOME/bin/startup.sh"
+fi
 
 echo ""
 echo "=== Deployed ==="
